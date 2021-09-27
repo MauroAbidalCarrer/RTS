@@ -1,0 +1,7 @@
+﻿#pragma kernel CSMain
+RWTexture2D<float4> map;
+[numthreads(8,8,1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+    map[id.xy] = float4(map[id.xy].r, map[id.xy].g, 0, map[id.xy].a); 
+}

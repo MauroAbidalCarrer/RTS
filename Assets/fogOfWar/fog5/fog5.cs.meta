@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 4e125590594ecbe4385dda0ed2d5bd8f
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - fogTex: {instanceID: 0}
+  - terrainTransform: {instanceID: 0}
+  - fogCS: {fileID: 7200000, guid: d48440143ebcda740a6eacb83e3d53ca, type: 3}
+  - clearCS: {fileID: 7200000, guid: a4d447a068f849b4c9675100e62ec173, type: 3}
+  - writeRectangles: {fileID: 7200000, guid: d38b4e367150c9a4a993c16f49ae04fb, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

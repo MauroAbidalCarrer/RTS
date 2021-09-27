@@ -1,0 +1,28 @@
+﻿#pragma kernel CSMain
+
+//rectangles
+struct rectangle
+{
+    float2 UVpos;
+    int height;
+    int2 size;
+};
+RWStructuredBuffer<rectangle> rectangles;
+
+RWTexture2D<float4> map;
+[numthreads(1, 1, 1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+    rectangle r = rectangles[id.x];
+    map[float2(0, 0)] = 1;
+    float4 col = float4((float)(r.height) / 10.0, 0, 0, 0);
+    for(int x = 0; x < r.size.x; x++)
+    {
+        for(int y = 0; y < r.size.y; y++)
+        {
+            int UVx = (int)r.UVpos.x + x; 
+            int UVy = (int)r.UVpos.y + y; 
+            map[int2(UVx, UVy)] = col; 
+        } 
+    }
+}

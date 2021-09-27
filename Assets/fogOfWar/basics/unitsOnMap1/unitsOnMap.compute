@@ -1,0 +1,31 @@
+﻿// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSMain
+
+//units
+struct unit
+{
+    float2 UVpos;
+    int height;
+    int viewRadius;
+};
+RWStructuredBuffer<unit> units;
+int nbUnits;
+
+//map
+int width;   
+int height;
+RWTexture2D<float4> map;
+[numthreads(1, 1, 1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+    unit u = units[id.x];
+    for(int x = 0; x < width / 10; x++)
+    {
+        for(int y = 0; y < height / 10; y++)
+        {
+            int UVx = (int)u.UVpos.x + x;
+            int UVy = (int)u.UVpos.y + y; 
+            map[int2(UVx, UVy)] = float4(1, 0, 0, 1); 
+        } 
+    }
+}
