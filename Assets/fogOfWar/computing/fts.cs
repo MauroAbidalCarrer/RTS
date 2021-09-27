@@ -1,24 +1,17 @@
-﻿using System.Collections.Generic;
+﻿﻿using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
 using System;
 
-public class list<T> : List<T>
-{
-    public void map(Predicate<T> match, Action<int> action)
-    {
-        for (int i = 0; i < Count; i++)
-            if (match(this[i])) action(i);
-    }
-    public list(IEnumerable<T> collection)
-    {
-        foreach (T item in collection)
-            Add(item);
-    }
-}
-
 public struct fts
 {
+    #region doIf
+    public void map<T>(IList<T> list, Predicate<T> match, Action<int, IList<T>> action)
+    {
+        for (int i = 0; i < list.Count; i++)
+            if (match(list[i])) action(i, list);
+    }
+    #endregion
     #region convert if
     public static List<T> mapif<T, T1>(Func<T1, T> conv, Predicate<T1> cond, IList<T1> list)
     {
