@@ -99,7 +99,7 @@ public class fog5 : MonoBehaviour
         if (radius == 0)
             throw new ArgumentException("radius == 0");
         radius *= worldToPix;
-        int sideLength = (int)((radius + fts.frac(radius))* 2f);
+        int sideLength = (int)fts.ceil(radius);
         Vector2[] offsets = new Vector2[(sideLength) * 4];
         for(int i = 0; i < sideLength; i++)
         {

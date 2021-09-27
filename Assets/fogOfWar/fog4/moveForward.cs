@@ -10,7 +10,7 @@ public class moveForward : MonoBehaviour, Iunit
     [SerializeField] float speed = 5;
     public float _viewRadius = 5;
     public int _height = 0;
-    void Awake() => _viewRadius = Random.value * 70;
+    void Awake() => _viewRadius = 45;
     void Update() => transform.Translate(speed * Time.deltaTime * Vector3.forward);
     //private void OnDrawGizmos() => Gizmos.DrawWireSphere(transform.position, _viewRadius);
 }

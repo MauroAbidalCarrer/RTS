@@ -85764,19 +85764,9 @@ MonoBehaviour:
   restart: 0
   fogTex: {fileID: 8400000, guid: 9f0c3bb5e8547b642bb6e5b607afde7a, type: 2}
   terrainTransform: {fileID: 178274201}
-  Rposs:
-  - {x: 500, y: 500}
-  - {x: 320, y: 156}
-  - {x: 354, y: 984}
-  - {x: 456, y: 846}
-  - {x: 0, y: 351}
-  Rheights: 0a0000000a0000000a0000000a0000000a000000
-  Rsizes:
-  - {x: 200, y: 200}
-  - {x: 123, y: 30}
-  - {x: 48, y: 68}
-  - {x: 15, y: 74}
-  - {x: 25, y: 50}
+  Rposs: []
+  Rheights: 
+  Rsizes: []
   fogCS: {fileID: 7200000, guid: d48440143ebcda740a6eacb83e3d53ca, type: 3}
   clearCS: {fileID: 7200000, guid: a4d447a068f849b4c9675100e62ec173, type: 3}
   writeRectangles: {fileID: 7200000, guid: d38b4e367150c9a4a993c16f49ae04fb, type: 3}
