@@ -58,7 +58,6 @@ public class fog5 : MonoBehaviour
         worldToPix = (float)fogTex.width / terrainSize.x; /*print("worldToPix= " + worldToPix);*/
         this.terrainSize = terrainSize;
         fogTex.enableRandomWrite = true;
-        #region checks
         if (Rposs.Length != Rheights.Length || Rheights.Length != Rsizes.Length)
         {
             print("Not all rect arrays are of same length!");
@@ -67,17 +66,18 @@ public class fog5 : MonoBehaviour
         if (Rposs.Length == 0)
         {
             print("no rectangles!");
-            return;
         }
-        #endregion
-        Rectangle mkRect(Vector2 p, int h, Vector2Int s) => new Rectangle(p, h, s);
-        var rects = fts.map(mkRect, Rposs, Rheights, Rsizes);
-        var rectsCB = new ComputeBuffer(rects.Length, sizeof(float) * 2 + sizeof(int) * 3);
-        rectsCB.SetData(rects);
-        writeRectangles.SetBuffer(0, "rectangles", rectsCB);
-        writeRectangles.SetTexture(0, "map", fogTex);
-        writeRectangles.Dispatch(0, rects.Length, 1, 1);
-        rectsCB.Dispose();
+        else
+        {
+            Rectangle mkRect(Vector2 p, int h, Vector2Int s) => new Rectangle(p, h, s);
+            var rects = fts.map(mkRect, Rposs, Rheights, Rsizes);
+            var rectsCB = new ComputeBuffer(rects.Length, sizeof(float) * 2 + sizeof(int) * 3);
+            rectsCB.SetData(rects);
+            writeRectangles.SetBuffer(0, "rectangles", rectsCB);
+            writeRectangles.SetTexture(0, "map", fogTex);
+            writeRectangles.Dispatch(0, rects.Length, 1, 1);
+            rectsCB.Dispose();
+        }
 
         temporarySetup();
     }
@@ -93,6 +93,7 @@ public class fog5 : MonoBehaviour
             else
                 radiiToUnitGroup.Add(rad, (new List<Iunit>() { go.GetComponent<Iunit>() }, getOffsetsCB(rad)));
         }
+        print(radiiToUnitGroup.Keys.Count);
     }
     ComputeBuffer getOffsetsCB(float radius)
     {
@@ -100,19 +101,32 @@ public class fog5 : MonoBehaviour
             throw new ArgumentException("radius == 0");
         radius *= worldToPix;
         int sideLength = (int)fts.ceil(radius);
-        Vector2[] offsets = new Vector2[(sideLength) * 4];
-        for(int i = 0; i < sideLength; i++)
+        Vector2[] offsets = new Vector2[sideLength * 4];
+        Debug.DrawLine(new Vector2(-1, 1) * radius, new Vector2(1, 1) * radius, Color.green, 5);
+        Debug.DrawLine(new Vector2(1, 1) * radius, new Vector2(1, -1) * radius, Color.green, 5);
+        Debug.DrawLine(new Vector2(1, -1) * radius, new Vector2(-1, -1) * radius, Color.green, 5);
+        Debug.DrawLine(new Vector2(-1, -1) * radius, new Vector2(-1, 1) * radius, Color.green, 5);
+        for(int i = 0; i < sideLength * 4; i++)
         {
-            offsets[i] = (Vector2.one * radius + new Vector2(0, -i)).normalized;
-            offsets[i + sideLength * 2] = (-Vector2.one * radius + new Vector2(0, i)).normalized;
-            offsets[i + sideLength] = (new Vector2(1, -1) * radius + new Vector2(-i, 0)).normalized;
-            offsets[i + sideLength * 3] = (new Vector2(-1, 1) * radius + new Vector2(i, 0)).normalized;
+            offsets[i] = (Vector2.one * radius + new Vector2(0, -i))/*.normalized*/;
+            offsets[i].Normalize();
+            print("offsets[" + i + "]= " + offsets[i] + ", normalized= " + offsets[i].normalized);
+            Debug.DrawLine(Vector3.zero, offsets[i], Color.red, 5);
+            offsets[i + sideLength * 2] = (-Vector2.one * radius + new Vector2(0, i))/*.normalized*/;
+            offsets[i + sideLength * 2].Normalize();
+            Debug.DrawLine(Vector3.zero, offsets[i + sideLength * 2], Color.red, 5);
+            offsets[i + sideLength] = (new Vector2(1, -1) * radius + new Vector2(-i, 0))/*.normalized*/;
+            offsets[i + sideLength].Normalize();
+            Debug.DrawLine(Vector3.zero, offsets[i + sideLength], Color.red, 5);
+            offsets[i + sideLength * 3] = (new Vector2(-1, 1) * radius + new Vector2(i, 0))/*.normalized*/;
+            offsets[i + sideLength * 3].Normalize();
+            Debug.DrawLine(Vector3.zero, offsets[i + sideLength * 3], Color.red, 5);
         }
         var viewRaysBuffer =  new ComputeBuffer(offsets.Length, sizeof(float) * 2);
-        for(int i = 0; i < offsets.Length; i++)
+        for (int i = 0; i < offsets.Length; i++)
         {
             if (offsets[i] == Vector2.zero)
-                print("null Vector at index " + i);
+                print("null Vector at index [" + i + "]");
         }
         viewRaysBuffer.SetData(offsets);
         return viewRaysBuffer;
@@ -122,15 +136,15 @@ public class fog5 : MonoBehaviour
     #region update
     [SerializeField, Range(10, 60)] float frequence = 30;
     float timmer;
-    void Update()
-    {
-        timmer += Time.deltaTime;
-        if(timmer >= 1f / frequence)
-        {
-            timmer = 0;
-            updateFog(radiiToUnitGroup);
-        }
-    }
+    //void Update()
+    //{
+    //    timmer += Time.deltaTime;
+    //    if(timmer >= 1f / frequence)
+    //    {
+    //        timmer = 0;
+    //        updateFog(radiiToUnitGroup);
+    //    }
+    //}
     struct unit
     {
         public Vector2 pPos;
